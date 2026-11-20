@@ -1,0 +1,148 @@
+# SentinelWatch Agent Configuration
+# Copy to config/agent.yaml and customize
+# All values can be overridden via environment variables (prefix: SW_AGENT_)
+
+# Backend API configuration
+backend:
+  # Backend URL (HTTPS in production)
+  url: "https://api.sentinelwatch.local"
+  api_prefix: "/api/v1"
+  timeout: 30
+  max_retries: 3
+  retry_base_delay: 1.0
+  retry_max_delay: 60.0
+
+# TLS/mTLS configuration
+tls:
+  # Client certificate file path
+  cert_file: ""
+  # Client private key file path
+  key_file: ""
+  # CA certificate file path
+  ca_file: ""
+  # Windows certificate store name (if using store)
+  store_name: "MY"
+  store_location: "CurrentUser"
+  # Certificate pin SHA256 (optional)
+  pin_sha256: ""
+
+# Agent identity configuration
+agent:
+  # Agent ID (set automatically after registration)
+  id: ""
+  # Enrollment token (required for first registration)
+  enrollment_token: ""
+  # Custom hostname override
+  hostname: ""
+  # Tags for agent grouping (comma-separated)
+  tags: ""
+  # Private key PEM (set automatically)
+  private_key_pem: ""
+
+# Collection intervals (seconds)
+collection:
+  process: 30
+  service: 60
+  startup: 3600
+  eventlog: 10
+  health: 60
+  config: 300
+
+# Batching configuration
+batching:
+  max_size: 100
+  max_interval: 5.0
+  compress: true
+  compression_level: 3
+
+# Event log configuration
+eventlog:
+  channels:
+    - "Security"
+    - "System"
+    - "Application"
+  event_ids:
+    - 4688
+    - 4689
+    - 7045
+    - 7036
+    - 4698
+    - 4699
+    - 4700
+    - 4701
+    - 4702
+  max_events_per_poll: 1000
+  bookmark_file: "data/eventlog_bookmarks.json"
+
+# Process collection configuration
+process:
+  collect_cmdline: true
+  collect_hashes: false
+  collect_connections: true
+  min_lifetime: 0
+  exclude_names: "System,Registry,smss.exe,csrss.exe,wininit.exe,services.exe,lsass.exe,fontdrvhost.exe"
+
+# Service collection configuration
+service:
+  collect_hashes: false
+  include_stopped: true
+
+# Startup collection configuration
+startup:
+  registry: true
+  scheduled_tasks: true
+  startup_folders: true
+  wmi_subscriptions: true
+
+# Secret redaction configuration
+redaction:
+  enabled: true
+  patterns:
+    - "(?i)(--?password\\s*[=:])[^\s]+"
+    - "(?i)(--?token\\s*[=:])[^\s]+"
+    - "(?i)(--?key\\s*[=:])[^\s]+"
+    - "(?i)(--?secret\\s*[=:])[^\s]+"
+    - "(?i)(api[_-]?key\\s*[=:])[^\s]+"
+    - "(?i)(access[_-]?token\\s*[=:])[^\s]+"
+    - "(?i)(aws[_-]?access[_-]?key[_-]?id\\s*[=:])[^\s]+"
+    - "(?i)(aws[_-]?secret[_-]?access[_-]?key\\s*[=:])[^\s]+"
+    - "(?i)(github[_-]?token\\s*[=:])[^\s]+"
+    - "(?i)(database[_-]?url\\s*[=:])[^\s]+"
+    - "(?i)(connection[_-]?string\\s*[=:])[^\s]+"
+    - "([A-Za-z0-9+/]{40,}={0,2})"
+  replacement: "[REDACTED]"
+
+# Health monitoring configuration
+health:
+  enabled: true
+  cpu_threshold: 80.0
+  memory_threshold_mb: 500
+  disk_threshold_gb: 1.0
+  queue_threshold: 1000
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "json"
+  file: "logs/agent.log"
+  max_size_mb: 100
+  backup_count: 5
+  structured: true
+
+# Windows service installation configuration
+service_install:
+  name: "SentinelWatchAgent"
+  display_name: "SentinelWatch Monitoring Agent"
+  description: "SentinelWatch Windows Endpoint Monitoring Agent"
+  start_type: "auto"
+  account: "LocalSystem"
+  dependencies: ""
+
+# Data directory
+data_dir: "data"
+
+# Feature flags
+features:
+  process_tree: false
+  fim: false
+  network_flows: false

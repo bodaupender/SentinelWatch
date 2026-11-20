@@ -1,0 +1,193 @@
+[project]
+name = "sentinelwatch-agent"
+version = "0.1.0"
+description = "SentinelWatch Windows Endpoint Monitoring Agent"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "SentinelWatch Team", email = "team@sentinelwatch.local"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+    "psutil>=5.9.0",
+    "pywin32>=306",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.3.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+    "cryptography>=42.0.0",
+    "structlog>=24.1.0",
+    "tenacity>=8.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "ruff>=0.4.0",
+    "mypy>=1.9.0",
+    "bandit>=1.7.0",
+    "pre-commit>=3.6.0",
+    "pyinstaller>=6.5.0",
+]
+compression = [
+    "zstandard>=0.22.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/sentinelwatch/sentinelwatch"
+Repository = "https://github.com/sentinelwatch/sentinelwatch"
+Issues = "https://github.com/sentinelwatch/sentinelwatch/issues"
+
+[project.scripts]
+sentinelwatch-agent = "sentinelwatch_agent.main:main"
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["sentinelwatch_agent*"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --strict-markers --strict-config"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow tests",
+    "windows: Windows-specific tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+show_error_codes = true
+pretty = true
+namespace_packages = true
+explicit_package_bases = true
+enable_error_code = ["ignore-without-code"]
+
+[[tool.mypy.overrides]]
+module = "win32*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pythoncom"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pywintypes"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "wmi"
+ignore_missing_imports = true
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+indent-style = "space"
+indent-width = 4
+quote-style = "double"
+docstring-code-format = true
+lint.select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "T20", # flake8-print
+    "PTH", # flake8-use-pathlib
+    "TRY", # tryceratops
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+    "ARG", # flake8-unused-arguments
+    "PL",  # pylint
+]
+lint.ignore = [
+    "S101", # assert in tests
+    "TRY003", # avoid specifying long messages outside exception
+]
+lint.per-file-ignores = { "tests/*" = ["S101", "TRY003"] }
+format.preview = true
+
+[tool.ruff.isort]
+known-first-party = ["sentinelwatch_agent"]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]  # assert_used
+targets = ["src"]
+
+[tool.coverage.run]
+source = ["src/sentinelwatch_agent"]
+omit = ["*/tests/*", "*/conftest.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.pyinstaller]
+spec-file = "sentinelwatch_agent.spec"
+dist-path = "dist"
+work-path = "build"
+clean = true
+noconfirm = true
+onefile = true
+console = false
+icon = "assets/icon.ico"
+add-data = [
+    "config/agent.yaml.example;config",
+]
+hidden-imports = [
+    "win32service",
+    "win32event",
+    "win32evtlog",
+    "win32evtlogutil",
+    "winreg",
+    "wmi",
+    "psutil._pswindows",
+    "cryptography.hazmat.backends.openssl",
+    "cryptography.hazmat.backends.openssl.aes",
+    "cryptography.hazmat.backends.openssl.rsa",
+    "zstandard.backend_cffi",
+]

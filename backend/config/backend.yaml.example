@@ -1,0 +1,308 @@
+# SentinelWatch Backend Configuration
+# Copy to config/backend.yaml and customize
+# All values can be overridden via environment variables (prefix: SW_BACKEND_)
+
+# Server Configuration
+server:
+  # Local Windows installs bind to localhost only.
+  host: "127.0.0.1"
+
+  # Port to listen on
+  port: 8001
+
+  # Enable debug mode (auto-reload, detailed errors)
+  debug: true
+
+  # Number of worker processes (for production, use gunicorn)
+  workers: 1
+
+  # Request timeout in seconds
+  timeout: 30
+
+  # Maximum request body size in bytes
+  max_body_size: 10485760  # 10MB
+
+# Database Configuration
+database:
+  # Database URL (SQLAlchemy format)
+  # SQLite for development: "sqlite+aiosqlite:///./data/sentinelwatch.db"
+  # PostgreSQL for production: "postgresql+asyncpg://user:pass@host:5432/dbname"
+  url: "sqlite+aiosqlite:///./data/sentinelwatch.db"
+
+  # Connection pool size
+  pool_size: 10
+
+  # Maximum overflow connections
+  max_overflow: 20
+
+  # Connection timeout in seconds
+  pool_timeout: 30
+
+  # Recycle connections after N seconds
+  pool_recycle: 3600
+
+  # Enable SQL echo (debug)
+  echo: false
+
+# TLS/SSL Configuration
+tls:
+  # Enable HTTPS
+  enabled: false
+
+  # Path to SSL certificate file
+  cert_file: ""
+
+  # Path to SSL private key file
+  key_file: ""
+
+  # Path to CA certificate for mTLS client verification
+  ca_file: ""
+
+  # Require client certificates (mTLS)
+  require_client_cert: false
+
+# Authentication Configuration
+auth:
+  # JWT secret key (generate with: openssl rand -hex 32)
+  # In production, use a strong random key and rotate periodically
+  jwt_secret: "CHANGE_ME_IN_PRODUCTION_USE_STRONG_RANDOM_KEY"
+
+  # JWT algorithm
+  jwt_algorithm: "HS256"
+
+  # Access token expiration in minutes
+  access_token_expire_minutes: 15
+
+  # Refresh token expiration in days
+  refresh_token_expire_days: 7
+
+  # Password hashing algorithm (argon2, bcrypt)
+  password_hash_algorithm: "argon2"
+
+  # Argon2 parameters
+  argon2_time_cost: 3
+  argon2_memory_cost: 65536
+  argon2_parallelism: 4
+
+  # Bcrypt rounds (if using bcrypt)
+  bcrypt_rounds: 12
+
+  # Enable MFA (TOTP)
+  mfa_enabled: true
+
+  # MFA issuer name
+  mfa_issuer: "SentinelWatch"
+
+# Rate Limiting Configuration
+rate_limiting:
+  # Enable rate limiting
+  enabled: true
+
+  # Default rate limit (requests per minute)
+  default_limit: 1000
+
+  # Default burst allowance
+  default_burst: 2000
+
+  # Agent telemetry ingestion limits
+  agent_limit: 100
+  agent_burst: 500
+
+  # Authentication endpoint limits
+  auth_limit: 10
+  auth_burst: 20
+
+  # Agent registration limits
+  register_limit: 5
+  register_burst: 10
+
+# CORS Configuration
+cors:
+  # Allow all origins (development only)
+  allow_all: false
+
+  # Allowed origins (comma-separated)
+  allowed_origins: "http://localhost:3000,http://127.0.0.1:3000"
+
+  # Allow credentials
+  allow_credentials: true
+
+  # Allowed methods
+  allowed_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+
+  # Allowed headers
+  allowed_headers: "Authorization,Content-Type,X-Request-ID"
+
+# Logging Configuration
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: "INFO"
+
+  # Log format: "json" or "console"
+  format: "json"
+
+  # Log file path (empty = stdout only)
+  file: "logs/backend.log"
+
+  # Maximum log file size in MB
+  max_size_mb: 100
+
+  # Number of rotated log files to keep
+  backup_count: 5
+
+  # Structured logging
+  structured: true
+
+# Audit Logging Configuration
+audit:
+  # Enable audit logging
+  enabled: true
+
+  # Audit log file path
+  file: "logs/audit.log"
+
+  # Maximum log file size in MB
+  max_size_mb: 500
+
+  # Number of rotated log files to keep
+  backup_count: 10
+
+  # Include request/response bodies (may contain sensitive data)
+  include_bodies: false
+
+# Metrics Configuration
+metrics:
+  # Enable Prometheus metrics
+  enabled: true
+
+  # Metrics endpoint path
+  path: "/metrics"
+
+# Agent Configuration Distribution
+agent_config:
+  # Default collection intervals (seconds)
+  collection_intervals:
+    process: 5
+    service: 30
+    startup: 3600
+    eventlog: 10
+    health: 60
+    heartbeat: 30
+    config: 300
+
+  # Default batching settings
+  batching:
+    max_size: 100
+    max_interval: 5.0
+    compress: true
+    compression_level: 3
+
+  # Default event log channels
+  eventlog_channels:
+    - "Security"
+    - "System"
+    - "Application"
+
+  # Default event IDs to collect
+  eventlog_event_ids:
+    - 4688
+    - 4689
+    - 7045
+    - 7036
+    - 4698
+    - 4699
+    - 4700
+    - 4701
+    - 4702
+
+  # Default process collection options
+  process:
+    collect_cmdline: true
+    collect_hashes: false
+    collect_connections: true
+    min_lifetime: 0
+    exclude_names: "System,Registry,smss.exe,csrss.exe,wininit.exe,services.exe,lsass.exe,fontdrvhost.exe"
+
+  # Default service collection options
+  service:
+    collect_hashes: false
+    include_stopped: true
+
+  # Default startup collection options
+  startup:
+    registry: true
+    scheduled_tasks: true
+    startup_folders: true
+    wmi_subscriptions: true
+
+  # Default redaction settings
+  redaction:
+    enabled: true
+
+# Detection Engine Configuration
+detection:
+  # Enable detection engine
+  enabled: true
+
+  # Rules directory (YAML/JSON rule files)
+  rules_dir: "detection-rules"
+
+  # Rule evaluation interval (seconds) - for periodic rules
+  evaluation_interval: 60
+
+  # Maximum rules to evaluate per telemetry record
+  max_rules_per_record: 1000
+
+  # Alert deduplication window (seconds)
+  dedup_window: 3600
+
+  # Correlation window (seconds)
+  correlation_window: 300
+
+# WebSocket Configuration
+websocket:
+  # Enable WebSocket for real-time alerts
+  enabled: true
+
+  # Heartbeat interval (seconds)
+  heartbeat_interval: 30
+
+  # Maximum message size
+  max_message_size: 1048576  # 1MB
+
+# Data Retention Configuration
+retention:
+  # Process telemetry retention (days)
+  process_telemetry_days: 30
+
+  # Service telemetry retention (days)
+  service_telemetry_days: 90
+
+  # Startup inventory retention (days)
+  startup_inventory_days: 365
+
+  # Event log retention (days)
+  eventlog_days: 365
+
+  # Alerts retention (days)
+  alerts_days: 365
+
+  # Evidence retention (days)
+  evidence_days: 365
+
+  # Audit logs retention (days)
+  audit_logs_days: 2555  # 7 years
+
+# Feature Flags
+features:
+  # Enable agent auto-registration (requires enrollment token)
+  agent_auto_registration: true
+
+  # Enable detection rules API
+  detection_rules_api: true
+
+  # Enable evidence storage
+  evidence_storage: true
+
+  # Enable WebSocket real-time updates
+  websocket_updates: true

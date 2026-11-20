@@ -1,0 +1,106 @@
+{
+  "backend": {
+    "url": "https://api.sentinelwatch.local",
+    "api_prefix": "/api/v1",
+    "timeout": 30,
+    "max_retries": 3,
+    "retry_base_delay": 1.0,
+    "retry_max_delay": 60.0
+  },
+  "tls": {
+    "cert_file": "",
+    "key_file": "",
+    "ca_file": "",
+    "store_name": "MY",
+    "store_location": "CurrentUser",
+    "pin_sha256": ""
+  },
+  "agent": {
+    "id": "",
+    "enrollment_token": "",
+    "hostname": "",
+    "tags": ""
+  },
+  "collection": {
+    "process": 5,
+    "service": 30,
+    "startup": 3600,
+    "eventlog": 10,
+    "health": 60,
+    "heartbeat": 30,
+    "config": 300
+  },
+  "batching": {
+    "max_size": 100,
+    "max_interval": 5.0,
+    "max_pending_records": 10000,
+    "compress": true,
+    "compression_level": 3
+  },
+  "eventlog": {
+    "channels": ["Security", "System", "Application"],
+    "event_ids": [4688, 4689, 7045, 7036, 4698, 4699, 4700, 4701, 4702],
+    "max_events_per_poll": 1000,
+    "bookmark_file": "data/eventlog_bookmarks.json"
+  },
+  "process": {
+    "collect_cmdline": true,
+    "collect_hashes": false,
+    "collect_connections": true,
+    "min_lifetime": 0,
+    "exclude_names": "System,Registry,smss.exe,csrss.exe,wininit.exe,services.exe,lsass.exe,fontdrvhost.exe"
+  },
+  "service": {
+    "collect_hashes": false,
+    "include_stopped": true
+  },
+  "startup": {
+    "registry": true,
+    "scheduled_tasks": true,
+    "startup_folders": true,
+    "wmi_subscriptions": true
+  },
+  "redaction": {
+    "enabled": true,
+    "patterns": [
+      "(?i)(--?password\\s*[=:])[^\\s]+",
+      "(?i)(--?token\\s*[=:])[^\\s]+",
+      "(?i)(--?key\\s*[=:])[^\\s]+",
+      "(?i)(--?secret\\s*[=:])[^\\s]+",
+      "(?i)(api[_-]?key\\s*[=:])[^\\s]+",
+      "(?i)(aws[_-]?access[_-]?key[_-]?id\\s*[=:])[^\\s]+",
+      "(?i)(database[_-]?url\\s*[=:])[^\\s]+",
+      "([A-Za-z0-9+/]{40,}={0,2})"
+    ],
+    "replacement": "[REDACTED]"
+  },
+  "health": {
+    "enabled": true,
+    "cpu_threshold": 80.0,
+    "memory_threshold_mb": 500,
+    "disk_threshold_gb": 1.0,
+    "queue_threshold": 1000
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "json",
+    "file": "logs/agent.log",
+    "max_size_mb": 100,
+    "backup_count": 5,
+    "structured": true
+  },
+  "service_install": {
+    "name": "SentinelWatchAgent",
+    "display_name": "SentinelWatch Monitoring Agent",
+    "description": "SentinelWatch Windows Endpoint Monitoring Agent",
+    "start_type": "auto",
+    "account": "LocalSystem",
+    "dependencies": ""
+  },
+  "data_dir": "data",
+  "features": {
+    "process_tree": false,
+    "fim": false,
+    "network_flows": false
+  }
+}

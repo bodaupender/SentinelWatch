@@ -1,0 +1,260 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+pytestdebug.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments - never commit secrets
+.env
+.env.*
+!.env.example
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Ruff
+.ruff_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific - never commit data, logs, or databases
+data/
+logs/
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite3-journal
+*.sqlite-wal
+
+# Agent certificates and identity - never commit
+*.pem
+*.key
+*.crt
+*.pfx
+agent/identity.json
+agent/certificates/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.local
+
+# Backend local databases (migrations remain publishable)
+backend/*.db
+backend/*.sqlite
+
+# Test outputs
+test-results/
+playwright-report/
+
+# Local configuration and service state - never commit
+backend/config/backend.yaml
+agent/config/agent.yaml
+.run/
+
+# Agent enrollment tokens and machine-specific state
+agent/data/eventlog_bookmarks.json
+agent/data/*.json
+agent/data/*.bookmark
+
+# Python virtual environments
+backend/.venv/
+backend/venv/
+agent/.venv/
+agent/venv/
+
+# Build artifacts
+backend/build/
+agent/build/
+agent/dist/
+*.spec
+
+# Coverage reports
+backend/htmlcov/
+agent/htmlcov/
+
+
+
+
+# Additional local credentials and sensitive runtime state
+.env*
+!.env.example
+secrets/
+.secrets/
+credentials/
+*.secret
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.p12
+*.p7b
+*.p7c
+*.pfx
+*.p8
+*.jks
+*.keystore
+
+# Database sidecars and local backups
+*.db-*
+*.sqlite-*
+*.sqlite3-*
+*.bak
+*.backup
+*.dump
+
+# Rotated logs, local archives, and generated telemetry
+*.log.*
+*.zip
+# Local cloud and SSH credentials
+.ssh/
+.aws/
+.azure/
+.gcloud/
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+ssh_host_*_key
+*.ppk
+credentials.json
+token.json
+
+# Windows-specific Python environments
+backend/.venv-win/
+agent/.venv-win/
+
+# Temporary recovery and investigation files
+*.broken_backup
+*.investigation-backup
+
+# Temporary development artifacts
+*.tmp
+*.temp
+
+# Old Git worktree pointer backups (local only)
+.git-worktree-pointer-backup
+.git-worktree-pointer-old
